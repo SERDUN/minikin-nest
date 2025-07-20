@@ -7,7 +7,7 @@ export function Factory(modules: any[]) {
 
     app.use(express.json());
 
-    const router = express.Router();
+    const expressRouter = express.Router();
 
     const listen = (port: number, callback?: () => void) => {
         for (const module of modules) {
@@ -23,11 +23,14 @@ export function Factory(modules: any[]) {
 
                 const instance = container.resolve(controller) as InstanceType<typeof controller>;
 
-                routes.forEach((r: any) => {
-                    const handler = instance[r.handlerName] as (...args: any[]) => Promise<any>;
-                    const path = prefix + r.path;
+                routes.forEach((router: any) => {
+                    const handler = instance[router.handlerName] as (...args: any[]) => Promise<any>;
+                    console.log(`Handler for ${router.handlerName} in ${controller.name} is`, handler);
 
-                    (router as any)[r.method](path);
+                    const path = prefix + router.path;
+                    console.log(`Registering route: ${router.method.toUpperCase()} ${path} -> ${router.handlerName} in ${controller.name}`);
+
+                    (expressRouter as any)[router.method](path, handler);
                 });
             }
         }
@@ -35,7 +38,7 @@ export function Factory(modules: any[]) {
         app.listen(port, callback);
     }
 
-    app.use(router);
+    app.use(expressRouter);
 
     return {
         get: container.resolve,

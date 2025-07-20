@@ -1,9 +1,11 @@
 {
   "name": "minikin-nest",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "dev": "tsx src/index.ts",
     "build": "tsc"
   },
   "dependencies": {
