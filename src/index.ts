@@ -1,5 +1,5 @@
 import { container, Factory } from "./core";
-import { UsersModule } from "./features/users/users.module";
+import { UsersModule } from "./app/features/users/users.module";
 
 const app = Factory([UsersModule])
 

@@ -1,6 +1,6 @@
 import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
-import { Module } from "../../core";
+import { Module } from "../../../core";
 
 @Module({
     controllers: [UsersController],

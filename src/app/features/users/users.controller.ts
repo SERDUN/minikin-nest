@@ -1,4 +1,4 @@
-import { Controller, Get } from "../../core";
+import { Controller, Get } from "../../../core";
 
 @Controller('/users')
 export class UsersController {
