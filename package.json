@@ -7,9 +7,11 @@
     "build": "tsc"
   },
   "dependencies": {
+    "express": "^5.1.0",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
+    "@types/express": "^5.0.3",
     "typescript": "^5.5.3"
   },
   "private": true

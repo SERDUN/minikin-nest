@@ -1,12 +1,8 @@
-import { container } from "./core";
-import { UsersController } from "./features/users/users.controller";
-import { UsersService } from "./features/users/users.service";
+import { container, Factory } from "./core";
+import { UsersModule } from "./features/users/users.module";
 
-// Directly registering UsersController
-container.register(UsersController, UsersController);
-let userController = container.resolve(UsersController);
-console.log(userController);
+const app = Factory([UsersModule])
 
-// Registered by decorator
-let userService = container.resolve(UsersService);
-console.log(userService)
+const port = 8081;
+
+app.listen(port, () => console.log(`Mini-Nest listening on http://localhost:${port}`));
