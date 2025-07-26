@@ -1,6 +1,10 @@
 import express from 'express';
 import { container } from '../container';
 import { get } from "../utils";
+import { asyncHandler } from "./async.handler";
+import { HandlerMiddleware } from "./handler.middleware";
+import { GuardsMiddleware } from "./guards.middleware";
+import { FiltersMiddleware } from "./filters.middleware";
 export function Factory(modules) {
     const app = express();
     app.use(express.json());
@@ -20,12 +24,11 @@ export function Factory(modules) {
                 const prefix = get('mini:prefix', controller) ?? '';
                 const routes = get('mini:routes', controller) ?? [];
                 const instance = container.resolve(controller);
-                console.log("Instance of controller:", instance);
+                // router.handlerName: route method name, e.g., getUser and defined by @Get('/user.ts')
                 routes.forEach((router) => {
                     const handler = instance[router.handlerName];
                     const path = prefix + router.path;
-                    console.log(`Registering route: ${router.method.toUpperCase()} ${path} -> ${router.handlerName} in ${controller.name}`);
-                    expressRouter[router.method](path, handler);
+                    expressRouter[router.method](path, asyncHandler(GuardsMiddleware(controller, handler, [])), asyncHandler(HandlerMiddleware(instance, handler, [])), asyncHandler(FiltersMiddleware(controller, handler, [])));
                 });
             }
         }
@@ -37,9 +40,6 @@ export function Factory(modules) {
         listen,
         use: (path, handler) => {
             app.use(path, handler);
-        },
-        useGlobalInterceptors: (interceptors) => {
-            throw new Error('Interceptors are not implemented yet');
         },
     };
 }

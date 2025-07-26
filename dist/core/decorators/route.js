@@ -5,7 +5,6 @@ export function Route(method, path = '') {
         Reflect.defineMetadata('mini:routes', routes, target.constructor);
     };
 }
-/* sugar helpers */
 export const Get = (p = '') => Route('get', p);
 export const Post = (p = '') => Route('post', p);
 export const Put = (p = '') => Route('put', p);

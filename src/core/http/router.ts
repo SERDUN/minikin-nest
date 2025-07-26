@@ -34,7 +34,7 @@ export function Factory(modules: any[]) {
 
                 const instance = container.resolve(controller) as InstanceType<typeof controller>;
 
-                // router.handlerName: route method name, e.g., getUser and defined by @Get('/user')
+                // router.handlerName: route method name, e.g., getUser and defined by @Get('/user.ts')
                 routes.forEach((router: any) => {
                     const handler = instance[router.handlerName] as (...args: any[]) => Promise<any>;
 

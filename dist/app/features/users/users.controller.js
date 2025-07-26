@@ -10,24 +10,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Controller, Get, Post, Delete } from "../../../core";
-import { z } from "zod";
+import { Controller, Get, Post, Delete, UseFilter, Body, Param, Query, UsePipes, UseGuards, RolesGuard, Roles } from "../../../core";
 import { UsersService } from "./users.service";
 import { ZodValidationPipe } from "../../piepes";
-import { Body, Param } from "../../../core/decorators/param";
-import { UsePipes } from "../../../core/decorators/use-pipes";
-// Zod schema for user creation
-const CreateUserDto = z.object({
-    name: z.string().min(1),
-    email: z.string().email()
-});
+import { NotFoundFilter } from "../../filters";
+import { CreateUserDto, IdSchema } from "./schemes";
 let UsersController = class UsersController {
     usersService;
     constructor(usersService) {
         this.usersService = usersService;
     }
-    list() {
-        return this.usersService.findAll();
+    list(search) {
+        return this.usersService.findAll(search);
     }
     getUser(id) {
         return this.usersService.findOne(id);
@@ -41,18 +35,21 @@ let UsersController = class UsersController {
 };
 __decorate([
     Get('/'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], UsersController.prototype, "list", null);
-__decorate([
-    Get('/:id'),
-    __param(0, Param('id')),
+    __param(0, Query('search')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
+], UsersController.prototype, "list", null);
+__decorate([
+    UseFilter(new NotFoundFilter()),
+    Get('/:id'),
+    __param(0, Param('id', new ZodValidationPipe(IdSchema))),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
 ], UsersController.prototype, "getUser", null);
 __decorate([
+    Roles('admin'),
     Post('/'),
     UsePipes(new ZodValidationPipe(CreateUserDto)),
     __param(0, Body()),
@@ -64,10 +61,11 @@ __decorate([
     Delete('/:id'),
     __param(0, Param('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "deleteUser", null);
 UsersController = __decorate([
+    UseGuards(RolesGuard),
     Controller('/users'),
     __metadata("design:paramtypes", [UsersService])
 ], UsersController);

@@ -9,11 +9,9 @@ export function UseGuards(...guards // посилання на класи Guard-
 ) {
     return (target, key) => {
         if (key) {
-            //  ➜ метод
             Reflect.defineMetadata(GUARDS_METADATA, guards, target[key]);
         }
         else {
-            //  ➜ клас-контролер
             Reflect.defineMetadata(GUARDS_METADATA, guards, target);
         }
     };
@@ -26,7 +24,7 @@ const getGuards = (handler, controllerClass, globalGuards = []) => {
 };
 export async function runGuards(controllerClass, handler, req, res, globalGuards = []) {
     const guards = getGuards(handler, controllerClass, globalGuards);
-    console.log({ guards });
+    console.log("Running guards for:", controllerClass.name, handler.name, guards);
     for (const GuardCtor of guards) {
         // інстанціюємо через IoC (підтримка @Injectable() всередині Guard-а)
         const guardInstance = container.resolve(GuardCtor);

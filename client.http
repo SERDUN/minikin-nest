@@ -3,7 +3,7 @@ GET http://localhost:3000/users
 Content-Type: application/json
 
 ### Get user by ID
-GET http://localhost:3000/users/1
+GET http://localhost:3000/users/12
 Content-Type: application/json
 
 ### Create a new user

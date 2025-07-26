@@ -1,13 +1,21 @@
 export class UsersService {
     users = new Map();
-    findAll() {
+    currentId = 1;
+    findAll(search) {
+        if (search) {
+            return Array.from(this.users.values()).filter(user => user.name.includes(search) || user.email.includes(search));
+        }
         return Array.from(this.users.values());
     }
     findOne(id) {
-        return this.users.get(id) ?? `User ${id} not found`;
+        const user = this.users.get(id);
+        if (!user) {
+            throw new Error(`User ${id} not found`);
+        }
+        return user;
     }
     create(user) {
-        const id = Date.now().toString();
+        const id = this.currentId++;
         this.users.set(id, { id, ...user });
         return { id, ...user };
     }

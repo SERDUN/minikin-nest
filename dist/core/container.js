@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { isClass } from "./utils";
 export class Container {
     // Map to hold registered classes/types and their tokens
     #registered = new Map();
@@ -30,3 +31,11 @@ export class Container {
     }
 }
 export const container = new Container();
+/**
+ * Returns an instance:
+ * - if given a class, resolves it via DI container
+ * - if already an instance, returns as-is
+ */
+export function resolveIfClass(target) {
+    return isClass(target) ? container.resolve(target) : target;
+}

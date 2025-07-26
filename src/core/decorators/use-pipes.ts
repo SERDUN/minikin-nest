@@ -1,14 +1,8 @@
 import { container } from "../container";
-import { ArgumentMetadata, Type } from "../utils";
+import { ArgumentMetadata, PipesType, PipeTransform } from "../types";
 import { isClass } from "../utils";
 
-export interface PipeTransform<T = any, R = any> {
-    transform(value: T, metadata: ArgumentMetadata): R | Promise<R>;
-}
-
 export const PIPES_METADATA = Symbol('pipes');
-
-type PipesType = Type<PipeTransform> | InstanceType<Type<PipeTransform>>;
 
 export function UsePipes(
     ...pipes: PipesType[]      // посилання на класи-пайпи

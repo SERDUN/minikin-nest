@@ -1,9 +1,33 @@
-import { ErrorRequestHandler } from "express";
-import { Type } from "../utils";
+import { ErrorRequestHandler, Request, Response } from "express";
+import { resolveIfClass } from "../container";
+import { FilterType, getFilters } from "../decorators";
+import { Type } from "../types";
 
-export const FiltersMiddleware = (controller: Type, handler: Function, filters: Array<Type>): ErrorRequestHandler => {
-    return (err, req, res, _next) => {
+/**
+ * FiltersMiddleware applies exception filters to any unhandled error.
+ * Supports global, controller-level and method-level filters.
+ */
+export const FiltersMiddleware = (
+    controller: Type,
+    handler: Function,
+    globalFilters: FilterType[] = []
+): ErrorRequestHandler => {
+    return async (err, req: Request, res: Response, _next) => {
         err.stack = undefined;
-        res.status((err as Error & { status: number }).status || 500).json({error: err.message || 'Server error'});
-    }
-}
+
+        const filters = getFilters(handler, controller, globalFilters);
+
+        for (const filter of filters) {
+            const instance = resolveIfClass(filter);
+
+            if (typeof instance.catch === 'function') {
+                await instance.catch(err, req, res, _next);
+                if (res.headersSent) return;
+            }
+        }
+
+        res.status((err as any)?.status || 500).json({
+            error: err.message || 'Internal server error',
+        });
+    };
+};

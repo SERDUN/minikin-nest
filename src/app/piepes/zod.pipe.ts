@@ -1,8 +1,7 @@
 import { ZodSchema } from 'zod';
-import { PipeTransform } from "../../core/decorators/use-pipes";
-import { ArgumentMetadata } from "../../core/utils";
+import { ArgumentMetadata, PipeTransform } from "../../core";
 
-export class ZodValidationPipe implements PipeTransform<any, any> {
+export class ZodValidationPipe implements PipeTransform {
     constructor(
         private readonly schema: ZodSchema
     ) {

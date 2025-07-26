@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { ArgumentMetadata, extractParams, get, PipesType, Type } from "../utils";
-import { runPipes } from "../decorators/use-pipes";
+import { get } from "../utils";
+import { runPipes } from "../decorators";
+import { ArgumentMetadata, extractParams, PipesType, Type } from "../types";
 
 class PipeError extends Error {
     constructor(message: string) {

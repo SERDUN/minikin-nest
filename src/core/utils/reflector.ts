@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { Injectable } from '../decorators';
-import { Type } from "./types";
+import { Type } from "../types";
 
 /**
  * A utility service that provides convenient access to metadata

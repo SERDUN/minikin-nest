@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { ExpressExecutionContext, Type } from "../utils";
+import { ExpressExecutionContext } from "../utils";
 import { container } from "../container";
+import { Type } from "../types";
 
 export const GUARDS_METADATA = Symbol('guards');
 
@@ -14,10 +15,8 @@ export function UseGuards(
 
     return (target: any, key?: string | symbol) => {
         if (key) {
-            //  ➜ метод
             Reflect.defineMetadata(GUARDS_METADATA, guards, target[key]);
         } else {
-            //  ➜ клас-контролер
             Reflect.defineMetadata(GUARDS_METADATA, guards, target);
         }
     };

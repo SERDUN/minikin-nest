@@ -1,16 +1,5 @@
-import { ArgumentMetadata, PipesType, Type } from "../utils";
-import { PIPES_METADATA } from "./use-pipes";
-// export function UsePipes(
-//     ...pipes: PipesType[]      // посилання на класи-пайпи
-// ): ClassDecorator & MethodDecorator {
-//     return (target: any, key?: string | symbol) => {
-//         const where = key ? target[key] : target;
-//         Reflect.defineMetadata(PIPES_METADATA, pipes, where);
-//     };
-// }
-//
+import { ArgumentMetadata, PipesType } from "../types";
 
-// TODO(Serdun): Finish param pipes support
 export function Param(data?: string, ...pipes: PipesType[]) {
     return function (target: any, methodName: string, index: number) {
         const ps = Reflect.getMetadata('design:paramtypes', target, methodName) ?? [];

@@ -12,7 +12,11 @@ export class UsersService {
     }
 
     findOne(id: number) {
-        return this.users.get(id) ?? `User ${id} not found`;
+        const user = this.users.get(id);
+        if (!user) {
+            throw new Error(`User ${id} not found`);
+        }
+        return user;
     }
 
     create(user: any) {

@@ -1,5 +1,3 @@
-export * from './extract'
-export * from './types'
 export * from './get-metadata'
 export * from './is-class'
 export * from './set-metadata'
