@@ -17,7 +17,6 @@ export class UsersController {
 
     @Get('/')
     list() {
-        console.log('test', this.usersService);
         return this.usersService.findAll();
     }
 

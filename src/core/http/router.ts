@@ -1,6 +1,10 @@
 import express from 'express';
 import { container } from '../container';
-import { get, Type } from "../utils";
+import { get } from "../utils";
+import { asyncHandler } from "./async.handler";
+import { HandlerMiddleware } from "./handler.middleware";
+import { GuardsMiddleware } from "./guards.middleware";
+import { FiltersMiddleware } from "./filters.middleware";
 
 export function Factory(modules: any[]) {
     const app = express();
@@ -35,22 +39,15 @@ export function Factory(modules: any[]) {
 
                     const path = prefix + router.path;
 
-                    console.log(`Registering route: ${router.method.toUpperCase()} ${path} -> ${router.handlerName} in ${controller.name}`);
-
-
-                    (expressRouter as any)[router.method](path, async (req: any, res: any, next: any) => {
-                        try {
-                            const result = await handler(req, res, next);
-                            if (res.headersSent) return;
-                            res.json(result);
-                        } catch (err) {
-                            next(err);
-                        }
-                    });
+                    (expressRouter as any)[router.method](
+                        path,
+                        asyncHandler(GuardsMiddleware(controller, handler, [])),
+                        asyncHandler(HandlerMiddleware(instance, handler, [])),
+                        asyncHandler(FiltersMiddleware(controller, handler, [])),
+                    );
                 });
             }
         }
-
 
         app.listen(port, callback);
     }
@@ -62,9 +59,6 @@ export function Factory(modules: any[]) {
         listen,
         use: (path: string, handler: express.RequestHandler) => {
             app.use(path, handler);
-        },
-        useGlobalInterceptors: (interceptors: any[]) => {
-            throw new Error('Interceptors are not implemented yet');
         },
     }
 }
