@@ -1,10 +1,12 @@
 export class UsersService {
     private users = new Map<string, any>();
 
-    findAll(Search?: string) {
-        return Array.from(this.users.values()).filter(user =>
-            !Search || user.name.toLowerCase().includes(Search.toLowerCase())
-        );
+    findAll(search?: string) {
+        if (search) {
+            return Array.from(this.users.values()).filter(user =>
+                user.name.includes(search) || user.email.includes(search));
+        }
+        return Array.from(this.users.values());
     }
 
     findOne(id: string) {

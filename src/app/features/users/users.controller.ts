@@ -19,8 +19,8 @@ export class UsersController {
     }
 
     @Get('/')
-    list() {
-        return this.usersService.findAll();
+    list(@Query('search') search?: string) {
+        return this.usersService.findAll(search);
     }
 
     @Get('/:id')
@@ -31,7 +31,6 @@ export class UsersController {
     @Post('/')
     @UsePipes(new ZodValidationPipe(CreateUserDto))
     createUser(@Body() user: User) {
-        console.log("Creating user:", user);
         return this.usersService.create(user);
     }
 

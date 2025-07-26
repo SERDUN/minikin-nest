@@ -1,5 +1,5 @@
 ### List users
-GET http://localhost:3000/users
+GET http://localhost:3000/users?search=Alice
 Content-Type: application/json
 
 ### Get user by ID
@@ -11,7 +11,7 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "name": "Alice",
+  "name": "Art",
   "email": "alice@example.com"
 }
 
