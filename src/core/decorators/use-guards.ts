@@ -45,7 +45,8 @@ export async function runGuards(
 ): Promise<boolean | string> {
     const guards = getGuards(handler, controllerClass, globalGuards);
 
-    console.log({guards})
+
+    console.log("Running guards for:", controllerClass.name, handler.name, guards);
 
     for (const GuardCtor of guards) {
         // інстанціюємо через IoC (підтримка @Injectable() всередині Guard-а)

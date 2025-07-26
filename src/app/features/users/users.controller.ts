@@ -4,7 +4,8 @@ import { UsersService } from "./users.service";
 import { ZodValidationPipe } from "../../piepes";
 import { Body, Param, Query } from "../../../core/decorators/param";
 import { UsePipes } from "../../../core/decorators/use-pipes";
-import { createZodPipe, useZodPipe } from "../../piepes/zod.param.pipe";
+import { Roles, RolesGuard } from "../../../core/guards/roles.guard";
+import { UseGuards } from "../../../core/decorators/use-guards";
 
 const CreateUserDto = z.object({
     name: z.string().min(1),
@@ -18,7 +19,7 @@ export const IdSchema = z.string().regex(/^\d+$/).transform(Number).refine(n => 
 
 export type User = z.infer<typeof CreateUserDto>;
 
-
+@UseGuards(RolesGuard) // застосовуємо глобально до всіх методів контролера
 @Controller('/users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {
@@ -34,6 +35,7 @@ export class UsersController {
         return this.usersService.findOne(id);
     }
 
+    @Roles('admin')
     @Post('/')
     @UsePipes(new ZodValidationPipe(CreateUserDto))
     createUser(@Body() user: User) {

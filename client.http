@@ -8,6 +8,7 @@ Content-Type: application/json
 
 ### Create a new user
 POST http://localhost:3000/users
+x-role: admin
 Content-Type: application/json
 
 {
