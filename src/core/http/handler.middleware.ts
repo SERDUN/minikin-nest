@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ArgumentMetadata, extractParams, get, Type } from "../utils";
+import { ArgumentMetadata, extractParams, get, PipesType, Type } from "../utils";
 import { runPipes } from "../decorators/use-pipes";
 
 class PipeError extends Error {
@@ -26,13 +26,19 @@ const getHandlerArgs = async (controller: Function, handler: Function, req: Requ
     const sortedMeta = [...methodMeta].sort((a, b) => a.index - b.index);
 
     const args: any[] = [];
-    console.log("Arguments metadata sorted:", args);
+    const paramLevelPipesMap: Record<number, PipesType[]> =
+        Reflect.getMetadata('mini:param_pipes', controller, handler.name) ?? {};
+
     for (const metadata of sortedMeta) {
         const extracted = extractParams(req, metadata.type);
         const argument = metadata.data ? extracted[metadata.data] : extracted;
 
         try {
-            args[metadata.index] = await runPipes(controller, handler, argument, metadata, globalPipes);
+            const paramPipes = paramLevelPipesMap[metadata.index] ?? [];
+
+            const fullPipeChain = [...globalPipes, ...paramPipes];
+
+            args[metadata.index] = await runPipes(controller, handler, argument, metadata, fullPipeChain);
         } catch (error: any) {
             throw new PipeError(`Pipe error for: ${error.message}`);
         }

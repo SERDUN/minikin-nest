@@ -35,14 +35,18 @@ export async function runPipes(
     handler: Function,
     value: unknown,
     meta: ArgumentMetadata,
-    globalPipes: PipesType[] = [],
+    pipes: PipesType[] = []
 ) {
-    const pipes = getPipes(handler, controllerCls, globalPipes);
-
     let transformed = value;
 
     for (const PipeCtor of pipes) {
-        const pipeInstance = isClass(PipeCtor) ? container.resolve<PipeTransform>(PipeCtor) : PipeCtor;
+        const pipeInstance = isClass(PipeCtor)
+            ? container.resolve<PipeTransform>(PipeCtor)
+            : PipeCtor;
+
+        if (!pipeInstance || typeof pipeInstance.transform !== 'function') {
+            throw new Error(`Invalid pipe for argument: ${meta.data}`);
+        }
 
         transformed = await Promise.resolve(
             pipeInstance.transform(transformed, meta)

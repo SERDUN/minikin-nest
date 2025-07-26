@@ -1,4 +1,7 @@
 import { Paramtype } from "./extract";
+import { PipeTransform } from "../decorators/use-pipes";
+
+export type PipesType = Type<PipeTransform> | InstanceType<Type<PipeTransform>>;
 
 // This file defines types and interfaces used in the Minikin Nest framework for argument metadata and type definitions.
 export interface Type<T = any> extends Function {
