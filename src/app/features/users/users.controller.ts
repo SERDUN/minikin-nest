@@ -2,13 +2,16 @@ import { Controller, Get, Post, Delete } from "../../../core";
 import { z } from "zod";
 import { UsersService } from "./users.service";
 import { ZodValidationPipe } from "../../piepes";
-import { Body, Param } from "../../../core/decorators/param";
+import { Body, Param, Query } from "../../../core/decorators/param";
 import { UsePipes } from "../../../core/decorators/use-pipes";
 
 const CreateUserDto = z.object({
     name: z.string().min(1),
     email: z.string().email()
 });
+
+export type User = z.infer<typeof CreateUserDto>;
+
 
 @Controller('/users')
 export class UsersController {
@@ -27,7 +30,8 @@ export class UsersController {
 
     @Post('/')
     @UsePipes(new ZodValidationPipe(CreateUserDto))
-    createUser(@Body() user: any) {
+    createUser(@Body() user: User) {
+        console.log("Creating user:", user);
         return this.usersService.create(user);
     }
 

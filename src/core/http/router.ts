@@ -35,7 +35,7 @@ export function Factory(modules: any[]) {
                 const instance = container.resolve(controller) as InstanceType<typeof controller>;
 
                 routes.forEach((router: any) => {
-                    const handler = instance[router.handlerName].bind(instance);
+                    const handler = instance[router.handlerName] as (...args: any[]) => Promise<any>;
 
                     const path = prefix + router.path;
 
