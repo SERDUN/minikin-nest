@@ -9,7 +9,6 @@ export function Route(method: Method, path = '') {
     };
 }
 
-/* sugar helpers */
 export const Get = (p = '') => Route('get', p);
 export const Post = (p = '') => Route('post', p);
 export const Put = (p = '') => Route('put', p);

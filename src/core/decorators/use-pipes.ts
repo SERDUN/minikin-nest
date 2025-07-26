@@ -1,6 +1,6 @@
 import { container } from "../container";
 import { ArgumentMetadata, Type } from "../utils";
-import { isClass } from "../utils/is-class";
+import { isClass } from "../utils";
 
 export interface PipeTransform<T = any, R = any> {
     transform(value: T, metadata: ArgumentMetadata): R | Promise<R>;

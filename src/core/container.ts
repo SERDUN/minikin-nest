@@ -13,7 +13,6 @@ export class Container {
             throw new Error(`Token ${token.name} is not registered.`);
         }
 
-
         const deps: any[] = Reflect.getMetadata("design:paramtypes", token) || [];
 
         console.log("Resolving dependencies for:", token.name, "with dependencies:", deps);

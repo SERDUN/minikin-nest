@@ -13,4 +13,3 @@ export interface ArgumentMetadata {
     readonly data?: string;             // @Body('userId') → 'userId'
     readonly name?: string;             // ім'я функції-методу, якщо декоратор використовується на методі
 }
-

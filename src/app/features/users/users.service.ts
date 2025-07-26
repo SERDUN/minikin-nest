@@ -1,5 +1,3 @@
-import { Injectable } from "../../../core";
-
 export class UsersService {
     private users = new Map<string, any>();
 
