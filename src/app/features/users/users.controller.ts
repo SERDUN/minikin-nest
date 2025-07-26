@@ -17,24 +17,23 @@ export class UsersController {
 
     @Get('/')
     list() {
-        console.log('test',this.usersService);
-        // return this.usersService.findAll();
-        return "tesr";
+        console.log('test', this.usersService);
+        return this.usersService.findAll();
     }
-    //
-    // @Get('/:id')
-    // getUser(@Param('id') id: string) {
-    //     return this.usersService.findOne(id);
-    // }
-    //
-    // @Post('/')
-    // @UsePipes(new ZodValidationPipe(CreateUserDto))
-    // createUser(@Body() user: any) {
-    //     return this.usersService.create(user);
-    // }
-    //
-    // @Delete('/:id')
-    // deleteUser(@Param('id') id: string) {
-    //     return this.usersService.delete(id);
-    // }
+
+    @Get('/:id')
+    getUser(@Param('id') id: string) {
+        return this.usersService.findOne(id);
+    }
+
+    @Post('/')
+    @UsePipes(new ZodValidationPipe(CreateUserDto))
+    createUser(@Body() user: any) {
+        return this.usersService.create(user);
+    }
+
+    @Delete('/:id')
+    deleteUser(@Param('id') id: string) {
+        return this.usersService.delete(id);
+    }
 }
