@@ -1,23 +1,17 @@
-import { Injectable } from "../../../core";
-
 export class UsersService {
-    private users = new Map<string, any>();
-
+    users = new Map();
     findAll() {
         return Array.from(this.users.values());
     }
-
-    findOne(id: string) {
+    findOne(id) {
         return this.users.get(id) ?? `User ${id} not found`;
     }
-
-    create(user: any) {
+    create(user) {
         const id = Date.now().toString();
-        this.users.set(id, {id, ...user});
-        return {id, ...user};
+        this.users.set(id, { id, ...user });
+        return { id, ...user };
     }
-
-    delete(id: string) {
+    delete(id) {
         const deleted = this.users.delete(id);
         return deleted ? `User ${id} deleted` : `User ${id} not found`;
     }

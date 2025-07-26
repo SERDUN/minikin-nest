@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { container, Factory } from "./core";
 import { UsersModule } from "./app/features/users/users.module";
 
