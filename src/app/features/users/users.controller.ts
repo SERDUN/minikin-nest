@@ -44,4 +44,9 @@ export class UsersController {
     deleteUser(@Param('id') id: number) {
         return this.usersService.delete(id);
     }
+
+    @Get('/crash')
+    getInternalError() {
+        throw new Error('Bingo!');
+    }
 }

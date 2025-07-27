@@ -16,8 +16,10 @@ export const FiltersMiddleware = (
         err.stack = undefined;
 
         const filters = getFilters(handler, controller, globalFilters);
+        console.log("filters", filters);
 
         for (const filter of filters) {
+            console.log("Filter: ", filter);
             const instance = resolveIfClass(filter);
 
             if (typeof instance.catch === 'function') {

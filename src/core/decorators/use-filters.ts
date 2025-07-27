@@ -18,7 +18,7 @@ export function getFilters(
     controllerClass: Function,
     globalFilters: FilterType[] = [],
 ): FilterType[] {
-    const controllerFilters = Reflect.getMetadata(FILTERS_METADATA, controllerClass) ?? [];
     const methodFilters = Reflect.getMetadata(FILTERS_METADATA, handler) ?? [];
-    return [...globalFilters, ...controllerFilters, ...methodFilters];
+    const controllerFilters = Reflect.getMetadata(FILTERS_METADATA, controllerClass) ?? [];
+    return [...methodFilters, ...controllerFilters, ...globalFilters];
 }

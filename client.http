@@ -3,7 +3,7 @@ GET http://localhost:3000/users
 Content-Type: application/json
 
 ### Get user by ID
-GET http://localhost:3000/users/12
+GET http://localhost:3000/users/812
 Content-Type: application/json
 
 ### Create a new user
@@ -18,4 +18,8 @@ Content-Type: application/json
 
 ### Delete user by ID
 DELETE http://localhost:3000/users/123
+Content-Type: application/json
+
+### Trigger 500 Internal Server Error
+GET http://localhost:3000/users/crash
 Content-Type: application/json

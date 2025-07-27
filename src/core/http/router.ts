@@ -6,6 +6,7 @@ import { HandlerMiddleware } from "./handler.middleware";
 import { GuardsMiddleware } from "./guards.middleware";
 import { FiltersMiddleware } from "./filters.middleware";
 import { Type } from "../types";
+import { FilterType } from "../decorators";
 
 interface FactoryOptions {
     globalGuards?: Type[];
@@ -22,7 +23,7 @@ export function Factory(modules: any[], options: FactoryOptions = {}) {
 
     const globalGuards: Array<Type> = [...(options.globalGuards ?? [])];
     const globalPipes: Array<Type> = [...(options.globalPipes ?? [])];
-    const globalFilters: Array<Type> = [...(options.globalFilters ?? [])];
+    const globalFilters: Array<FilterType> = [...(options.globalFilters ?? [])];
 
     const listen = (port: number, callback?: () => void) => {
         for (const module of modules) {
@@ -77,7 +78,7 @@ export function Factory(modules: any[], options: FactoryOptions = {}) {
         useGlobalPipes: (...pipes: Type[]) => {
             globalPipes.push(...pipes);
         },
-        useGlobalFilters: (...filters: Type[]) => {
+        useGlobalFilters: (...filters: FilterType[]) => {
             globalFilters.push(...filters);
         },
     };
