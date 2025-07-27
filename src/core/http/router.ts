@@ -5,18 +5,28 @@ import { asyncHandler } from "./async.handler";
 import { HandlerMiddleware } from "./handler.middleware";
 import { GuardsMiddleware } from "./guards.middleware";
 import { FiltersMiddleware } from "./filters.middleware";
+import { Type } from "../types";
 
-export function Factory(modules: any[]) {
+interface FactoryOptions {
+    globalGuards?: Type[];
+    globalPipes?: Type[];
+    globalFilters?: Type[];
+}
+
+export function Factory(modules: any[], options: FactoryOptions = {}) {
     const app = express();
 
     app.use(express.json());
 
     const expressRouter = express.Router();
 
+    const globalGuards: Array<Type> = [...(options.globalGuards ?? [])];
+    const globalPipes: Array<Type> = [...(options.globalPipes ?? [])];
+    const globalFilters: Array<Type> = [...(options.globalFilters ?? [])];
+
     const listen = (port: number, callback?: () => void) => {
         for (const module of modules) {
             const meta = get('mini:module', module);
-            console.log('Registering module:', meta);
 
             if (!meta) continue;
 
@@ -42,9 +52,9 @@ export function Factory(modules: any[]) {
 
                     (expressRouter as any)[router.method](
                         path,
-                        asyncHandler(GuardsMiddleware(controller, handler, [])),
-                        asyncHandler(HandlerMiddleware(instance, handler, [])),
-                        asyncHandler(FiltersMiddleware(controller, handler, [])),
+                        asyncHandler(GuardsMiddleware(controller, handler, globalGuards)),
+                        asyncHandler(HandlerMiddleware(instance, handler, globalPipes)),
+                        asyncHandler(FiltersMiddleware(controller, handler, globalFilters)),
                     );
                 });
             }
@@ -61,5 +71,14 @@ export function Factory(modules: any[]) {
         use: (path: string, handler: express.RequestHandler) => {
             app.use(path, handler);
         },
-    }
+        useGlobalGuards: (...guards: Type[]) => {
+            globalGuards.push(...guards);
+        },
+        useGlobalPipes: (...pipes: Type[]) => {
+            globalPipes.push(...pipes);
+        },
+        useGlobalFilters: (...filters: Type[]) => {
+            globalFilters.push(...filters);
+        },
+    };
 }
