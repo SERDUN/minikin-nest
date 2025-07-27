@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { NextFunction, Request } from 'express';
 
 export type PipesType = Type<PipeTransform> | InstanceType<Type<PipeTransform>>;
 
@@ -20,6 +20,10 @@ export interface ArgumentMetadata {
 
 export interface PipeTransform<T = any, R = any> {
     transform(value: T, metadata: ArgumentMetadata): R | Promise<R>;
+}
+
+export interface Interceptor {
+    intercept(req: Request, res: Response, next: NextFunction): any;
 }
 
 export const extractParams = (Req: Request, type: Paramtype) => {

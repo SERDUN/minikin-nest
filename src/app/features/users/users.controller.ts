@@ -9,12 +9,13 @@ import {
     Query,
     UsePipes,
     UseGuards,
-    RolesGuard, Roles
+    RolesGuard, Roles, UseInterceptor
 } from "../../../core";
 import { UsersService } from "./users.service";
 import { ZodValidationPipe } from "../../piepes";
 import { NotFoundFilter } from "../../filters";
 import { CreateUserDto, IdSchema, User } from "./schemes";
+import { LoggingInterceptor } from "../../interceptors";
 
 @UseGuards(RolesGuard)
 @Controller('/users')
@@ -22,6 +23,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {
     }
 
+    @UseInterceptor(LoggingInterceptor)
     @Get('/')
     list(@Query('search') search?: string) {
         return this.usersService.findAll(search);

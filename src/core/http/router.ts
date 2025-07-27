@@ -6,12 +6,14 @@ import { HandlerMiddleware } from "./handler.middleware";
 import { GuardsMiddleware } from "./guards.middleware";
 import { FiltersMiddleware } from "./filters.middleware";
 import { Type } from "../types";
-import { FilterType } from "../decorators";
+import { FilterType, InterceptorType } from "../decorators";
+import { InterceptorsMiddleware } from "./interceptor.middleware";
 
 interface FactoryOptions {
     globalGuards?: Type[];
     globalPipes?: Type[];
     globalFilters?: Type[];
+    globalInterceptors?: InterceptorType[];
 }
 
 export function Factory(modules: any[], options: FactoryOptions = {}) {
@@ -24,6 +26,7 @@ export function Factory(modules: any[], options: FactoryOptions = {}) {
     const globalGuards: Array<Type> = [...(options.globalGuards ?? [])];
     const globalPipes: Array<Type> = [...(options.globalPipes ?? [])];
     const globalFilters: Array<FilterType> = [...(options.globalFilters ?? [])];
+    const globalInterceptors: Array<InterceptorType> = [...(options.globalInterceptors ?? [])];
 
     const listen = (port: number, callback?: () => void) => {
         for (const module of modules) {
@@ -54,6 +57,7 @@ export function Factory(modules: any[], options: FactoryOptions = {}) {
                     (expressRouter as any)[router.method](
                         path,
                         asyncHandler(GuardsMiddleware(controller, handler, globalGuards)),
+                        asyncHandler(InterceptorsMiddleware(controller, handler, globalInterceptors)),
                         asyncHandler(HandlerMiddleware(instance, handler, globalPipes)),
                         asyncHandler(FiltersMiddleware(controller, handler, globalFilters)),
                     );
@@ -80,6 +84,9 @@ export function Factory(modules: any[], options: FactoryOptions = {}) {
         },
         useGlobalFilters: (...filters: FilterType[]) => {
             globalFilters.push(...filters);
+        },
+        useGlobalInterceptors: (...interceptors: InterceptorType[]) => {
+            globalInterceptors.push(...interceptors);
         },
     };
 }
